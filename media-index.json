@@ -1,0 +1,353 @@
+{
+  "gallery": [
+    {
+      "id": "g01",
+      "object": "Spoon_B",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g01.mp4",
+      "poster": "assets/posters/gallery-g01.jpg"
+    },
+    {
+      "id": "g02",
+      "object": "Whisk",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g02.mp4",
+      "poster": "assets/posters/gallery-g02.jpg"
+    },
+    {
+      "id": "g03",
+      "object": "Carrot",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g03.mp4",
+      "poster": "assets/posters/gallery-g03.jpg"
+    },
+    {
+      "id": "g04",
+      "object": "Bottle_A",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g04.mp4",
+      "poster": "assets/posters/gallery-g04.jpg"
+    },
+    {
+      "id": "g05",
+      "object": "Teapot_B",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g05.mp4",
+      "poster": "assets/posters/gallery-g05.jpg"
+    },
+    {
+      "id": "g06",
+      "object": "Small frying pan",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g06.mp4",
+      "poster": "assets/posters/gallery-g06.jpg"
+    },
+    {
+      "id": "g07",
+      "object": "Candle",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g07.mp4",
+      "poster": "assets/posters/gallery-g07.jpg"
+    },
+    {
+      "id": "g08",
+      "object": "Beer bottle",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g08.mp4",
+      "poster": "assets/posters/gallery-g08.jpg"
+    },
+    {
+      "id": "g09",
+      "object": "Wine glass",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/gallery-g09.mp4",
+      "poster": "assets/posters/gallery-g09.jpg"
+    },
+    {
+      "id": "g10",
+      "object": "Banana_D",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g10.mp4",
+      "poster": "assets/posters/gallery-g10.jpg"
+    },
+    {
+      "id": "g11",
+      "object": "Can_C",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g11.mp4",
+      "poster": "assets/posters/gallery-g11.jpg"
+    },
+    {
+      "id": "g12",
+      "object": "Banana_E",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g12.mp4",
+      "poster": "assets/posters/gallery-g12.jpg"
+    },
+    {
+      "id": "g13",
+      "object": "Mug_C",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g13.mp4",
+      "poster": "assets/posters/gallery-g13.jpg"
+    },
+    {
+      "id": "g14",
+      "object": "Mug_D",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g14.mp4",
+      "poster": "assets/posters/gallery-g14.jpg"
+    },
+    {
+      "id": "g15",
+      "object": "Brick_D",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g15.mp4",
+      "poster": "assets/posters/gallery-g15.jpg"
+    },
+    {
+      "id": "g16",
+      "object": "Can_D",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g16.mp4",
+      "poster": "assets/posters/gallery-g16.jpg"
+    },
+    {
+      "id": "g17",
+      "object": "Banana_F",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g17.mp4",
+      "poster": "assets/posters/gallery-g17.jpg"
+    },
+    {
+      "id": "g18",
+      "object": "Mug_E",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g18.mp4",
+      "poster": "assets/posters/gallery-g18.jpg"
+    },
+    {
+      "id": "g19",
+      "object": "Brick_E",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g19.mp4",
+      "poster": "assets/posters/gallery-g19.jpg"
+    },
+    {
+      "id": "g20",
+      "object": "Brick_F",
+      "dataset": "DexYCB",
+      "video": "assets/videos/gallery-g20.mp4",
+      "poster": "assets/posters/gallery-g20.jpg"
+    }
+  ],
+  "comparison": [
+    {
+      "id": "p01",
+      "object": "Potato_A",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/comparison-p01-fig4.mp4",
+      "poster": "assets/posters/comparison-p01-fig4.jpg"
+    },
+    {
+      "id": "p02",
+      "object": "Carrot",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/comparison-p02-fig4.mp4",
+      "poster": "assets/posters/comparison-p02-fig4.jpg"
+    },
+    {
+      "id": "p03",
+      "object": "Teapot_A",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/comparison-p03-fig4.mp4",
+      "poster": "assets/posters/comparison-p03-fig4.jpg"
+    },
+    {
+      "id": "p04",
+      "object": "Can_A",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p04-fig4.mp4",
+      "poster": "assets/posters/comparison-p04-fig4.jpg"
+    },
+    {
+      "id": "p05",
+      "object": "Mug_A",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p05-fig4.mp4",
+      "poster": "assets/posters/comparison-p05-fig4.jpg"
+    },
+    {
+      "id": "p06",
+      "object": "Banana_A",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p06-fig4.mp4",
+      "poster": "assets/posters/comparison-p06-fig4.jpg"
+    },
+    {
+      "id": "p07",
+      "object": "Mug_B",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p07-fig4.mp4",
+      "poster": "assets/posters/comparison-p07-fig4.jpg"
+    },
+    {
+      "id": "p08",
+      "object": "Brick_A",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p08-fig4.mp4",
+      "poster": "assets/posters/comparison-p08-fig4.jpg"
+    },
+    {
+      "id": "p09",
+      "object": "Whisk",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/comparison-p09-fig4.mp4",
+      "poster": "assets/posters/comparison-p09-fig4.jpg"
+    },
+    {
+      "id": "p10",
+      "object": "Spoon_A",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/comparison-p10-fig4.mp4",
+      "poster": "assets/posters/comparison-p10-fig4.jpg"
+    },
+    {
+      "id": "p11",
+      "object": "Potato_B",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/comparison-p11-fig4.mp4",
+      "poster": "assets/posters/comparison-p11-fig4.jpg"
+    },
+    {
+      "id": "p12",
+      "object": "Banana_B",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p12-fig4.mp4",
+      "poster": "assets/posters/comparison-p12-fig4.jpg"
+    },
+    {
+      "id": "p13",
+      "object": "Brick_B",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p13-fig4.mp4",
+      "poster": "assets/posters/comparison-p13-fig4.jpg"
+    },
+    {
+      "id": "p14",
+      "object": "Can_B",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p14-fig4.mp4",
+      "poster": "assets/posters/comparison-p14-fig4.jpg"
+    },
+    {
+      "id": "p15",
+      "object": "Banana_C",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p15-fig4.mp4",
+      "poster": "assets/posters/comparison-p15-fig4.jpg"
+    },
+    {
+      "id": "p16",
+      "object": "Brick_C",
+      "dataset": "DexYCB",
+      "video": "assets/videos/comparison-p16-fig4.mp4",
+      "poster": "assets/posters/comparison-p16-fig4.jpg"
+    }
+  ],
+  "diversity": [
+    {
+      "id": "d01",
+      "object": "Chinese teacup",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/diversity-d01.mp4",
+      "poster": "assets/posters/diversity-d01.jpg"
+    },
+    {
+      "id": "d02",
+      "object": "Chinese teacup",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/diversity-d02.mp4",
+      "poster": "assets/posters/diversity-d02.jpg"
+    },
+    {
+      "id": "d03",
+      "object": "Chinese teacup",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/diversity-d03.mp4",
+      "poster": "assets/posters/diversity-d03.jpg"
+    },
+    {
+      "id": "d04",
+      "object": "Spoon_A",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/diversity-d04.mp4",
+      "poster": "assets/posters/diversity-d04.jpg"
+    },
+    {
+      "id": "d05",
+      "object": "Spoon_A",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/diversity-d05.mp4",
+      "poster": "assets/posters/diversity-d05.jpg"
+    },
+    {
+      "id": "d06",
+      "object": "Spoon_A",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/diversity-d06.mp4",
+      "poster": "assets/posters/diversity-d06.jpg"
+    },
+    {
+      "id": "d07",
+      "object": "Brick_G",
+      "dataset": "DexYCB",
+      "video": "assets/videos/diversity-d07.mp4",
+      "poster": "assets/posters/diversity-d07.jpg"
+    },
+    {
+      "id": "d08",
+      "object": "Brick_G",
+      "dataset": "DexYCB",
+      "video": "assets/videos/diversity-d08.mp4",
+      "poster": "assets/posters/diversity-d08.jpg"
+    },
+    {
+      "id": "d09",
+      "object": "Brick_G",
+      "dataset": "DexYCB",
+      "video": "assets/videos/diversity-d09.mp4",
+      "poster": "assets/posters/diversity-d09.jpg"
+    }
+  ],
+  "failure": [
+    {
+      "id": "f01",
+      "object": "Can_F",
+      "dataset": "DexYCB",
+      "video": "assets/videos/failure-f01.mp4",
+      "poster": "assets/posters/failure-f01.jpg"
+    },
+    {
+      "id": "f02",
+      "object": "Chinese teacup",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/failure-f02.mp4",
+      "poster": "assets/posters/failure-f02.jpg"
+    },
+    {
+      "id": "f03",
+      "object": "Chinese teacup",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/failure-f03.mp4",
+      "poster": "assets/posters/failure-f03.jpg"
+    },
+    {
+      "id": "f04",
+      "object": "Stamp",
+      "dataset": "Open-CHOIR",
+      "video": "assets/videos/failure-f04.mp4",
+      "poster": "assets/posters/failure-f04.jpg"
+    }
+  ]
+}

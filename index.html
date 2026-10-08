@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Learning Dynamic Grasping: complete hand–object motions from a single initial configuration.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="light">
+  <title>Learning Dynamic Grasping</title>
+  <link rel="icon" href="assets/logo.png" type="image/png" sizes="512x512">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body id="top">
+  <a class="skip-link" href="#abstract">Skip to content</a>
+  <nav class="site-nav" aria-label="Page sections"><div class="nav-inner">
+    <a class="brand" href="#top"><img class="brand-logo" src="assets/logo.png" alt="" width="32" height="32">Learning Dynamic Grasping</a>
+    <div class="nav-links"><a href="#abstract">Abstract</a><a href="#gallery">Gallery</a><a href="#comparison">Comparison</a><a href="#diversity">Diversity</a><a href="#limitations">Limitations</a></div>
+  </div></nav>
+  <div class="page">
+    <header class="hero">
+      <h1>Learning Dynamic Grasping</h1>
+      <div class="authors">
+        <p class="author-list"><span>Nga Kiu Ho<sup>1</sup></span><span>Yilin Liu<sup>1</sup></span><span>Hao Xu<sup>2</sup></span><span>Niloy Mitra<sup>1</sup></span></p>
+        <p class="affiliations"><span><sup>1</sup>University College London</span><span><sup>2</sup>The Chinese University of Hong Kong</span></p>
+      </div>
+      <!-- Paper and Code are placeholders: replace href="#" with the real URL and the "Soon" badge disappears. -->
+      <div class="hero-links"><a class="button" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zm0 0v5h5M9 13h6m-6 4h6"/></svg> Paper (arXiv)</a><a class="button" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 8-4 4 4 4m6-8 4 4-4 4"/></svg> Code</a></div>
+      <div class="hero-links"><a class="button button-primary" href="#gallery"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 4 10 8-10 8z"/></svg> Watch results</a><a class="button" href="#comparison">Compare motions <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a></div>
+    </header>
+    <main>
+      <section class="section overview" aria-label="Teaser and abstract">
+        <figure class="teaser">
+          <a href="assets/teaser-paper-da23370aa9f6.webp" aria-label="View the full-resolution paper teaser"><img src="assets/teaser-paper-da23370aa9f6.webp" alt="The paper teaser shows the initial right-hand pose and object, a grasping contact map inset, and the approach, grasp, and lift sequence." width="2800" height="515" fetchpriority="high"></a>
+          <figcaption>Learning dynamic grasping from a single initial hand–object configuration. Given only an object and an initial hand pose (left), our method generates a complete grasping motion: approach, contact, and lift (right). A grasping contact map (see inset) conditions hand poses generated at arbitrary normalized times, and object motion is recovered from the hand by training-free rigid registration.</figcaption>
+        </figure>
+        <div class="abstract" id="abstract"><h2>Abstract</h2><p>Synthesizing believable 4D hand–object grasping sequences is important for character animation, extended reality, and embodied agents. Grasping requires a hand to approach, contact, and lift or manipulate an object coherently. Existing synthesis methods often model only the final static grasp or rely on additional conditions, such as language, target grasps, or object trajectories, to specify the interaction. We instead study the underconstrained problem of generating a complete grasping motion from a single initial hand–object state. Our framework decouples hand-motion generation from object-motion recovery. Given an object point cloud in the initial wrist frame and the initial parameterized hand configuration, conditional flow matching predicts a sequence-level contact map and a hand pose at each normalized sequence time. This time-indexed formulation avoids the error accumulation of autoregressive rollout while representing the complete motion. We then infer an attachment frame and recover rigid-object motion through training-free, contact-guided weighted registration. We evaluate on held-out DexYCB objects and unseen object geometries reconstructed from in-the-wild videos by Open-CHOIR. Compared with LatentHOI, our method produces smoother hand and object motion in every setting, matches or improves on its contact and penetration metrics in the wild under a shared initialization, and is about 30× faster per generated frame. In a 15-participant study, our motions were preferred in roughly two thirds of (forced-choice pairwise) comparisons. Precise contact closure on novel geometry, however, remains a key open challenge. Code will be released.</p></div>
+      </section>
+      <noscript><p class="no-script">All results are shown below. Use each video’s controls to play, pause, or view fullscreen.</p></noscript>
+      <div class="playback-bar"><span class="results-label">Explore the results</span><div class="playback-controls js-only"><label for="playback-speed">Playback</label><select id="playback-speed" aria-label="Video playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select><button type="button" class="autoplay-button" id="autoplay" aria-pressed="true" title="Automatically play visible videos"><span class="switch-track" aria-hidden="true"></span><span id="autoplay-label">Autoplay on</span></button></div></div>
+      <section id="gallery" class="section">
+        <div class="section-head"><div><p class="eyebrow">01 / Generated motions</p><h2>From pose to grasp</h2></div><span class="section-count">20 sequences</span></div>
+        <p class="section-desc">Approach, finger closure, and post-grasp motion on held-out DexYCB objects and unseen Open-CHOIR reconstructions. Each video shows the complete sequence from two synchronized viewpoints.</p>
+        <div class="toolbar js-only" data-filter-section="gallery"><div class="filters" role="group" aria-label="Filter gallery by dataset"><button type="button" class="filter" data-filter="all" aria-pressed="true">All <small>20</small></button><button type="button" class="filter" data-filter="DexYCB" aria-pressed="false">DexYCB <small>11</small></button><button type="button" class="filter" data-filter="Open-CHOIR" aria-pressed="false">Open-CHOIR <small>9</small></button></div><span class="result-count" aria-live="polite">Showing 20 of 20 sequences</span></div>
+        <div class="video-grid"><article class="video-card" id="gallery-g01" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G01</span><h3>Spoon B</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g01.jpg" width="768" height="424" aria-label="Spoon B · Open-CHOIR: Ours · GT initialization">
+          <source src="assets/videos/gallery-g01.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g01.mp4">Play Spoon B video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g01.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Spoon B · Open-CHOIR" aria-label="Enlarge Spoon B · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g02" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G02</span><h3>Whisk</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g02.jpg" width="768" height="424" aria-label="Whisk · Open-CHOIR: Ours · GT initialization">
+          <source src="assets/videos/gallery-g02.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g02.mp4">Play Whisk video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g02.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Whisk · Open-CHOIR" aria-label="Enlarge Whisk · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g03" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G03</span><h3>Carrot</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g03.jpg" width="768" height="424" aria-label="Carrot · Open-CHOIR: Ours · GT initialization">
+          <source src="assets/videos/gallery-g03.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g03.mp4">Play Carrot video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g03.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Carrot · Open-CHOIR" aria-label="Enlarge Carrot · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g04" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G04</span><h3>Bottle A</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g04.jpg" width="768" height="424" aria-label="Bottle A · Open-CHOIR: Ours · GT initialization">
+          <source src="assets/videos/gallery-g04.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g04.mp4">Play Bottle A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g04.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Bottle A · Open-CHOIR" aria-label="Enlarge Bottle A · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g05" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G05</span><h3>Teapot B</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g05.jpg" width="768" height="424" aria-label="Teapot B · Open-CHOIR: Ours · LatentHOI initialization">
+          <source src="assets/videos/gallery-g05.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g05.mp4">Play Teapot B video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g05.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · LatentHOI initialization</span><button type="button" class="expand js-only" data-expand="Teapot B · Open-CHOIR" aria-label="Enlarge Teapot B · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g06" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G06</span><h3>Small frying pan</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g06.jpg" width="768" height="424" aria-label="Small frying pan · Open-CHOIR: Ours · GT initialization">
+          <source src="assets/videos/gallery-g06.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g06.mp4">Play Small frying pan video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g06.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Small frying pan · Open-CHOIR" aria-label="Enlarge Small frying pan · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g07" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G07</span><h3>Candle</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g07.jpg" width="768" height="424" aria-label="Candle · Open-CHOIR: Ours · GT initialization">
+          <source src="assets/videos/gallery-g07.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g07.mp4">Play Candle video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g07.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Candle · Open-CHOIR" aria-label="Enlarge Candle · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g08" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G08</span><h3>Beer bottle</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g08.jpg" width="768" height="424" aria-label="Beer bottle · Open-CHOIR: Ours · GT initialization">
+          <source src="assets/videos/gallery-g08.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g08.mp4">Play Beer bottle video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g08.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Beer bottle · Open-CHOIR" aria-label="Enlarge Beer bottle · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g09" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G09</span><h3>Wine glass</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g09.jpg" width="768" height="424" aria-label="Wine glass · Open-CHOIR: Ours · GT initialization">
+          <source src="assets/videos/gallery-g09.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g09.mp4">Play Wine glass video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g09.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Wine glass · Open-CHOIR" aria-label="Enlarge Wine glass · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g10" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G10</span><h3>Banana D</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g10.jpg" width="768" height="424" aria-label="Banana D · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g10.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g10.mp4">Play Banana D video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g10.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Banana D · DexYCB" aria-label="Enlarge Banana D · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g11" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G11</span><h3>Can C</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g11.jpg" width="768" height="424" aria-label="Can C · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g11.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g11.mp4">Play Can C video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g11.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Can C · DexYCB" aria-label="Enlarge Can C · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g12" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G12</span><h3>Banana E</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g12.jpg" width="768" height="424" aria-label="Banana E · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g12.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g12.mp4">Play Banana E video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g12.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Banana E · DexYCB" aria-label="Enlarge Banana E · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g13" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G13</span><h3>Mug C</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g13.jpg" width="768" height="424" aria-label="Mug C · DexYCB: Ours · LatentHOI initialization">
+          <source src="assets/videos/gallery-g13.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g13.mp4">Play Mug C video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g13.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · LatentHOI initialization</span><button type="button" class="expand js-only" data-expand="Mug C · DexYCB" aria-label="Enlarge Mug C · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g14" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G14</span><h3>Mug D</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g14.jpg" width="768" height="424" aria-label="Mug D · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g14.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g14.mp4">Play Mug D video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g14.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Mug D · DexYCB" aria-label="Enlarge Mug D · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g15" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G15</span><h3>Brick D</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g15.jpg" width="768" height="424" aria-label="Brick D · DexYCB: Ours · LatentHOI initialization">
+          <source src="assets/videos/gallery-g15.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g15.mp4">Play Brick D video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g15.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · LatentHOI initialization</span><button type="button" class="expand js-only" data-expand="Brick D · DexYCB" aria-label="Enlarge Brick D · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g16" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G16</span><h3>Can D</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g16.jpg" width="768" height="424" aria-label="Can D · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g16.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g16.mp4">Play Can D video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g16.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Can D · DexYCB" aria-label="Enlarge Can D · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g17" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G17</span><h3>Banana F</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g17.jpg" width="768" height="424" aria-label="Banana F · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g17.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g17.mp4">Play Banana F video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g17.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Banana F · DexYCB" aria-label="Enlarge Banana F · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g18" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G18</span><h3>Mug E</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g18.jpg" width="768" height="424" aria-label="Mug E · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g18.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g18.mp4">Play Mug E video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g18.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Mug E · DexYCB" aria-label="Enlarge Mug E · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g19" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G19</span><h3>Brick E</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g19.jpg" width="768" height="424" aria-label="Brick E · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g19.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g19.mp4">Play Brick E video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g19.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Brick E · DexYCB" aria-label="Enlarge Brick E · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="gallery-g20" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">G20</span><h3>Brick F</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/gallery-g20.jpg" width="768" height="424" aria-label="Brick F · DexYCB: Ours · GT initialization">
+          <source src="assets/videos/gallery-g20.mp4" type="video/mp4">
+          <a href="assets/videos/gallery-g20.mp4">Play Brick F video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/gallery-g20.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · GT initialization</span><button type="button" class="expand js-only" data-expand="Brick F · DexYCB" aria-label="Enlarge Brick F · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article></div>
+        <p class="video-note">GT initialization uses the annotated first-frame hand pose; Open-CHOIR reconstructions provide pseudo-ground truth. Blue: hand. Orange: object. Videos include all 65 sequence frames, with brief holds at the beginning and end.</p>
+      </section>
+      <section id="comparison" class="section">
+        <div class="section-head"><div><p class="eyebrow">02 / Qualitative comparison</p><h2>Comparison with baselines</h2></div><span class="section-count">16 scenes</span></div>
+        <p class="section-desc">The eight scenes from the main paper and eight additional scenes are shown below. DexGraspNet, LatentHOI, and ours are shown side by side with synchronized overall and side/contact views. DexGraspNet interpolates to a static grasp and holds its final pose; LatentHOI and ours generate motion.</p>
+        <div class="toolbar js-only" data-filter-section="comparison"><div class="filters" role="group" aria-label="Filter comparison by dataset"><button type="button" class="filter" data-filter="all" aria-pressed="true">All <small>16</small></button><button type="button" class="filter" data-filter="DexYCB" aria-pressed="false">DexYCB <small>10</small></button><button type="button" class="filter" data-filter="Open-CHOIR" aria-pressed="false">Open-CHOIR <small>6</small></button></div><span class="result-count" aria-live="polite">Showing 16 of 16 sequences</span></div>
+        <div class="video-grid comparison-grid"><article class="video-card" id="comparison-p01" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P01</span><h3>Potato A</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p01-fig4.jpg" width="2400" height="1600" aria-label="Potato A · Open-CHOIR: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p01-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p01-fig4.mp4">Play Potato A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p01-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Potato A · Open-CHOIR" aria-label="Enlarge Potato A · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p02" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P02</span><h3>Carrot</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p02-fig4.jpg" width="2400" height="1600" aria-label="Carrot · Open-CHOIR: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p02-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p02-fig4.mp4">Play Carrot video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p02-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Carrot · Open-CHOIR" aria-label="Enlarge Carrot · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p03" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P03</span><h3>Teapot A</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p03-fig4.jpg" width="2400" height="1600" aria-label="Teapot A · Open-CHOIR: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p03-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p03-fig4.mp4">Play Teapot A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p03-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Teapot A · Open-CHOIR" aria-label="Enlarge Teapot A · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p04" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P04</span><h3>Can A</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p04-fig4.jpg" width="2400" height="1600" aria-label="Can A · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p04-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p04-fig4.mp4">Play Can A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p04-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Can A · DexYCB" aria-label="Enlarge Can A · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p05" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P05</span><h3>Mug A</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p05-fig4.jpg" width="2400" height="1600" aria-label="Mug A · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p05-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p05-fig4.mp4">Play Mug A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p05-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Mug A · DexYCB" aria-label="Enlarge Mug A · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p06" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P06</span><h3>Banana A</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p06-fig4.jpg" width="2400" height="1600" aria-label="Banana A · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p06-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p06-fig4.mp4">Play Banana A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p06-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Banana A · DexYCB" aria-label="Enlarge Banana A · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p07" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P07</span><h3>Mug B</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p07-fig4.jpg" width="2400" height="1600" aria-label="Mug B · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p07-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p07-fig4.mp4">Play Mug B video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p07-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Mug B · DexYCB" aria-label="Enlarge Mug B · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p08" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P08</span><h3>Brick A</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p08-fig4.jpg" width="2400" height="1600" aria-label="Brick A · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p08-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p08-fig4.mp4">Play Brick A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p08-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Brick A · DexYCB" aria-label="Enlarge Brick A · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p09" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P09</span><h3>Whisk</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p09-fig4.jpg" width="2400" height="1600" aria-label="Whisk · Open-CHOIR: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p09-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p09-fig4.mp4">Play Whisk video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p09-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Whisk · Open-CHOIR" aria-label="Enlarge Whisk · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p10" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P10</span><h3>Spoon A</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p10-fig4.jpg" width="2400" height="1600" aria-label="Spoon A · Open-CHOIR: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p10-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p10-fig4.mp4">Play Spoon A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p10-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Spoon A · Open-CHOIR" aria-label="Enlarge Spoon A · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p11" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P11</span><h3>Potato B</h3></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p11-fig4.jpg" width="2400" height="1600" aria-label="Potato B · Open-CHOIR: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p11-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p11-fig4.mp4">Play Potato B video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p11-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Potato B · Open-CHOIR" aria-label="Enlarge Potato B · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p12" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P12</span><h3>Banana B</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p12-fig4.jpg" width="2400" height="1600" aria-label="Banana B · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p12-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p12-fig4.mp4">Play Banana B video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p12-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Banana B · DexYCB" aria-label="Enlarge Banana B · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p13" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P13</span><h3>Brick B</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p13-fig4.jpg" width="2400" height="1600" aria-label="Brick B · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p13-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p13-fig4.mp4">Play Brick B video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p13-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Brick B · DexYCB" aria-label="Enlarge Brick B · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p14" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P14</span><h3>Can B</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p14-fig4.jpg" width="2400" height="1600" aria-label="Can B · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p14-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p14-fig4.mp4">Play Can B video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p14-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Can B · DexYCB" aria-label="Enlarge Can B · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p15" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P15</span><h3>Banana C</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p15-fig4.jpg" width="2400" height="1600" aria-label="Banana C · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p15-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p15-fig4.mp4">Play Banana C video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p15-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Banana C · DexYCB" aria-label="Enlarge Banana C · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="comparison-p16" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><span class="scene-id">P16</span><h3>Brick C</h3></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      <div class="method-labels" aria-hidden="true"><span>DexGraspNet</span><span>LatentHOI</span><span>Ours</span></div>
+      <div class="video-wrap"><span class="view-label view-overall">Overall view</span><span class="view-label view-side">Side / contact view</span>
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/comparison-p16-fig4.jpg" width="2400" height="1600" aria-label="Brick C · DexYCB: Left: DexGraspNet · Middle: LatentHOI · Right: Ours">
+          <source src="assets/videos/comparison-p16-fig4.mp4" type="video/mp4">
+          <a href="assets/videos/comparison-p16-fig4.mp4">Play Brick C video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/comparison-p16-fig4.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Left: DexGraspNet · Middle: LatentHOI · Right: Ours</span><button type="button" class="expand js-only" data-expand="Brick C · DexYCB" aria-label="Enlarge Brick C · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article></div>
+        <p class="video-note">This is a task-level comparison: LatentHOI uses object geometry and a text prompt, without the observed initial hand pose. The videos share a displayed starting configuration. Enlarge a video to inspect contact and finger motion.</p>
+      </section>
+      <section id="diversity" class="section">
+        <div class="section-head"><div><p class="eyebrow">03 / Sampling diversity</p><h2>One starting state, different motions</h2></div><span class="section-count">3 objects · 9 samples</span></div>
+        <p class="section-desc">Three generated samples share the same initial configuration for each object, illustrating variation in the resulting grasping motions. Replay a row together to compare the samples over time.</p>
+        <div class="sample-group"><div class="sample-heading"><h3>Chinese teacup</h3><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span><button class="sync-button js-only" type="button" aria-label="Replay all three Chinese teacup samples together"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.5 7M3 4v7h7"/></svg> Replay together</button></div><div class="sample-grid"><article class="video-card" id="diversity-d01" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><h4>Sample 1</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d01.jpg" width="768" height="424" aria-label="Chinese teacup · Sample 1 · Open-CHOIR: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d01.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d01.mp4">Play Chinese teacup video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d01.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Chinese teacup · Sample 1 · Open-CHOIR" aria-label="Enlarge Chinese teacup · Sample 1 · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="diversity-d02" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><h4>Sample 2</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d02.jpg" width="768" height="424" aria-label="Chinese teacup · Sample 2 · Open-CHOIR: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d02.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d02.mp4">Play Chinese teacup video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d02.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Chinese teacup · Sample 2 · Open-CHOIR" aria-label="Enlarge Chinese teacup · Sample 2 · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="diversity-d03" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><h4>Sample 3</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d03.jpg" width="768" height="424" aria-label="Chinese teacup · Sample 3 · Open-CHOIR: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d03.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d03.mp4">Play Chinese teacup video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d03.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Chinese teacup · Sample 3 · Open-CHOIR" aria-label="Enlarge Chinese teacup · Sample 3 · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article></div></div><div class="sample-group"><div class="sample-heading"><h3>Spoon A</h3><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span><button class="sync-button js-only" type="button" aria-label="Replay all three Spoon A samples together"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.5 7M3 4v7h7"/></svg> Replay together</button></div><div class="sample-grid"><article class="video-card" id="diversity-d04" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><h4>Sample 1</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d04.jpg" width="768" height="424" aria-label="Spoon A · Sample 1 · Open-CHOIR: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d04.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d04.mp4">Play Spoon A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d04.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Spoon A · Sample 1 · Open-CHOIR" aria-label="Enlarge Spoon A · Sample 1 · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="diversity-d05" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><h4>Sample 2</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d05.jpg" width="768" height="424" aria-label="Spoon A · Sample 2 · Open-CHOIR: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d05.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d05.mp4">Play Spoon A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d05.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Spoon A · Sample 2 · Open-CHOIR" aria-label="Enlarge Spoon A · Sample 2 · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="diversity-d06" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><h4>Sample 3</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d06.jpg" width="768" height="424" aria-label="Spoon A · Sample 3 · Open-CHOIR: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d06.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d06.mp4">Play Spoon A video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d06.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Spoon A · Sample 3 · Open-CHOIR" aria-label="Enlarge Spoon A · Sample 3 · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article></div></div><div class="sample-group"><div class="sample-heading"><h3>Brick G</h3><span class="dataset" data-dataset="DexYCB">DexYCB</span><button class="sync-button js-only" type="button" aria-label="Replay all three Brick G samples together"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.5 7M3 4v7h7"/></svg> Replay together</button></div><div class="sample-grid"><article class="video-card" id="diversity-d07" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><h4>Sample 1</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d07.jpg" width="768" height="424" aria-label="Brick G · Sample 1 · DexYCB: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d07.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d07.mp4">Play Brick G video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d07.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Brick G · Sample 1 · DexYCB" aria-label="Enlarge Brick G · Sample 1 · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="diversity-d08" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><h4>Sample 2</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d08.jpg" width="768" height="424" aria-label="Brick G · Sample 2 · DexYCB: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d08.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d08.mp4">Play Brick G video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d08.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Brick G · Sample 2 · DexYCB" aria-label="Enlarge Brick G · Sample 2 · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="diversity-d09" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><h4>Sample 3</h4></div></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/diversity-d09.jpg" width="768" height="424" aria-label="Brick G · Sample 3 · DexYCB: Two synchronized viewpoints">
+          <source src="assets/videos/diversity-d09.mp4" type="video/mp4">
+          <a href="assets/videos/diversity-d09.mp4">Play Brick G video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/diversity-d09.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Two synchronized viewpoints</span><button type="button" class="expand js-only" data-expand="Brick G · Sample 3 · DexYCB" aria-label="Enlarge Brick G · Sample 3 · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article></div></div>
+      </section>
+      <section id="limitations" class="section">
+        <div class="section-head"><div><p class="eyebrow">04 / Failure cases</p><h2>Where grasping remains difficult</h2></div><span class="section-count">3 failure modes</span></div>
+        <p class="section-desc">Incorrect trigger-frame selection, sensitivity to the starting hand pose, and thin or small objects can lead to incomplete closure, penetration, or implausible object motion. The teacup pair includes both a successful and an unsuccessful initialization.</p>
+        <div class="video-grid failure-grid"><article class="video-card" id="failure-f01" data-dataset="DexYCB">
+      <header class="card-heading"><div class="card-title"><div><h3>Can F</h3><div class="failure-kind">Incorrect trigger-frame selection</div></div></div><span class="dataset" data-dataset="DexYCB">DexYCB</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/failure-f01.jpg" width="768" height="424" aria-label="Can F · DexYCB: Ours · failure case">
+          <source src="assets/videos/failure-f01.mp4" type="video/mp4">
+          <a href="assets/videos/failure-f01.mp4">Play Can F video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/failure-f01.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · failure case</span><button type="button" class="expand js-only" data-expand="Can F · DexYCB" aria-label="Enlarge Can F · DexYCB"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="failure-f02" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><div><h3>Chinese teacup</h3><div class="failure-kind">Initial pose dependency · success</div></div></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/failure-f02.jpg" width="768" height="424" aria-label="Chinese teacup · Open-CHOIR: Success example">
+          <source src="assets/videos/failure-f02.mp4" type="video/mp4">
+          <a href="assets/videos/failure-f02.mp4">Play Chinese teacup video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/failure-f02.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Success example</span><button type="button" class="expand js-only" data-expand="Chinese teacup · Open-CHOIR" aria-label="Enlarge Chinese teacup · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="failure-f03" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><div><h3>Chinese teacup</h3><div class="failure-kind">Initial pose dependency · failure</div></div></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/failure-f03.jpg" width="768" height="424" aria-label="Chinese teacup · Open-CHOIR: Failure example">
+          <source src="assets/videos/failure-f03.mp4" type="video/mp4">
+          <a href="assets/videos/failure-f03.mp4">Play Chinese teacup video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/failure-f03.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Failure example</span><button type="button" class="expand js-only" data-expand="Chinese teacup · Open-CHOIR" aria-label="Enlarge Chinese teacup · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article><article class="video-card" id="failure-f04" data-dataset="Open-CHOIR">
+      <header class="card-heading"><div class="card-title"><div><h3>Stamp</h3><div class="failure-kind">Thin or small objects</div></div></div><span class="dataset" data-dataset="Open-CHOIR">Open-CHOIR</span></header>
+      
+      <div class="video-wrap">
+        <video class="result-video" controls muted loop playsinline preload="none" poster="assets/posters/failure-f04.jpg" width="768" height="424" aria-label="Stamp · Open-CHOIR: Ours · failure case">
+          <source src="assets/videos/failure-f04.mp4" type="video/mp4">
+          <a href="assets/videos/failure-f04.mp4">Play Stamp video</a>
+        </video>
+        <p class="video-error" hidden>Unable to play inline. <a href="assets/videos/failure-f04.mp4">Open video</a>.</p>
+      </div>
+      <footer class="card-footer"><span>Ours · failure case</span><button type="button" class="expand js-only" data-expand="Stamp · Open-CHOIR" aria-label="Enlarge Stamp · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
+    </article></div>
+        <p class="limit-note">The recovered object motion uses a fixed rigid attachment, which excludes sliding, regrasping, release, and articulated or deformable objects. Geometric attachment does not guarantee stability under gravity or external forces.</p>
+      </section>
+    </main>
+    <footer class="footer"><span>Learning Dynamic Grasping</span><a href="#top">Back to top <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-5 5 5-5 5 5"/></svg></a></footer>
+  </div>
+  <dialog id="video-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-caption"><div class="dialog-heading"><div><h2 id="dialog-title">Result video</h2><p id="dialog-caption"></p></div><button type="button" id="close-dialog" class="close-dialog" aria-label="Close enlarged video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div><video id="dialog-video" class="dialog-video" controls muted loop playsinline preload="none"></video></dialog>
+</body>
+</html>
