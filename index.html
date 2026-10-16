@@ -4,10 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Learning Dynamic Grasping: complete hand–object motions from a single initial configuration.">
-  <meta name="robots" content="noindex, nofollow">
+  <meta name="robots" content="index, follow">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light">
   <title>Learning Dynamic Grasping</title>
+  <link rel="canonical" href="https://yilinliu77.github.io/grasping/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Learning Dynamic Grasping">
+  <meta property="og:description" content="Complete hand–object motions from a single initial configuration. Paper, generated motions, and comparisons.">
+  <meta property="og:url" content="https://yilinliu77.github.io/grasping/">
+  <meta property="og:image" content="https://yilinliu77.github.io/grasping/assets/teaser-paper-da23370aa9f6.webp">
+  <meta property="og:image:alt" content="An initial hand and object configuration followed by a generated approach, grasp, and lift sequence.">
+  <meta property="og:image:width" content="2800">
+  <meta property="og:image:height" content="515">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="citation_title" content="Learning Dynamic Grasping">
+  <meta name="citation_author" content="Ho, Nga Kiu Kelly">
+  <meta name="citation_author" content="Liu, Yilin">
+  <meta name="citation_author" content="Xu, Hao">
+  <meta name="citation_author" content="Mitra, Niloy J.">
+  <meta name="citation_publication_date" content="2026/10/10">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2610.14848">
+  <meta name="citation_doi" content="10.48550/arXiv.2610.14848">
+  <link rel="alternate" type="application/x-bibtex" href="citation.bib" title="BibTeX citation">
   <link rel="icon" href="assets/logo.png" type="image/png" sizes="512x512">
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
@@ -16,18 +35,23 @@
   <a class="skip-link" href="#abstract">Skip to content</a>
   <nav class="site-nav" aria-label="Page sections"><div class="nav-inner">
     <a class="brand" href="#top"><img class="brand-logo" src="assets/logo.png" alt="" width="32" height="32">Learning Dynamic Grasping</a>
-    <div class="nav-links"><a href="#abstract">Abstract</a><a href="#gallery">Gallery</a><a href="#comparison">Comparison</a><a href="#diversity">Diversity</a><a href="#limitations">Limitations</a></div>
+    <div class="nav-links"><a href="#abstract">Abstract</a><a href="#gallery">Gallery</a><a href="#comparison">Comparison</a><a href="#diversity">Diversity</a><a href="#limitations">Limitations</a><a href="#citation">Citation</a></div>
   </div></nav>
   <div class="page">
     <header class="hero">
       <h1>Learning Dynamic Grasping</h1>
+      <p class="subtitle">Complete hand–object motions from a single initial configuration.</p>
       <div class="authors">
-        <p class="author-list"><span>Nga Kiu Kelly Ho<sup>1</sup></span><span>Yilin Liu<sup>1</sup></span><span>Hao Xu<sup>2,3</sup></span><span>Niloy Mitra<sup>1,3</sup></span></p>
+        <p class="author-list"><span>Nga Kiu Kelly Ho<sup>1</sup></span><span>Yilin Liu<sup>1</sup></span><span>Hao Xu<sup>2,3</sup></span><span>Niloy J. Mitra<sup>1,3</sup></span></p>
         <p class="affiliations"><span><sup>1</sup>University College London</span><span><sup>2</sup>The Chinese University of Hong Kong</span><span><sup>3</sup>Adobe Research</span></p>
       </div>
-      <!-- Paper and Code are placeholders: replace href="#" with the real URL and the "Soon" badge disappears. -->
-      <div class="hero-links"><a class="button" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zm0 0v5h5M9 13h6m-6 4h6"/></svg> Paper (arXiv)</a><a class="button" href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 8-4 4 4 4m6-8 4 4-4 4"/></svg> Code</a></div>
-      <div class="hero-links"><a class="button button-primary" href="#gallery"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 4 10 8-10 8z"/></svg> Watch results</a><a class="button" href="#comparison">Compare motions <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a></div>
+      <div class="hero-links">
+        <a class="button button-primary" href="https://arxiv.org/abs/2610.14848"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zm0 0v5h5M9 13h6m-6 4h6"/></svg> Paper (arXiv)</a>
+        <a class="button" href="https://arxiv.org/pdf/2610.14848"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 17v4h14v-4"/></svg> PDF</a>
+        <a class="button" href="#citation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6H4v7h6V6Zm10 0h-6v7h6V6ZM10 13c0 4-2 5-5 5m15-5c0 4-2 5-5 5"/></svg> Cite</a>
+        <span class="button button-unavailable"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 8-4 4 4 4m6-8 4 4-4 4"/></svg> Code <span class="soon-badge">Coming soon</span></span>
+      </div>
+      <div class="hero-jumps"><a href="#gallery"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 4 10 8-10 8z"/></svg> Watch results</a><a href="#comparison">Compare motions <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a></div>
     </header>
     <main>
       <section class="section overview" aria-label="Teaser and abstract">
@@ -602,6 +626,25 @@
       <footer class="card-footer"><span>Ours · failure case</span><button type="button" class="expand js-only" data-expand="Stamp · Open-CHOIR" aria-label="Enlarge Stamp · Open-CHOIR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg> Enlarge</button></footer>
     </article></div>
         <p class="limit-note">The recovered object motion uses a fixed rigid attachment, which excludes sliding, regrasping, release, and articulated or deformable objects. Geometric attachment does not guarantee stability under gravity or external forces.</p>
+      </section>
+      <section id="citation" class="section citation" aria-labelledby="citation-title">
+        <div class="section-head"><div><p class="eyebrow">05 / Reference</p><h2 id="citation-title">Citation</h2></div><a class="paper-reference" href="https://arxiv.org/abs/2610.14848">arXiv:2610.14848</a></div>
+        <p class="section-desc">If you use this work, please cite our paper.</p>
+        <div class="citation-tools">
+          <a class="button" href="citation.bib" download>Download .bib</a>
+          <button class="button js-only" type="button" id="copy-citation" aria-controls="bibtex" aria-describedby="citation-status"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8H5v13h11v-4M9 3h11v14H9z"/></svg> Copy BibTeX</button>
+        </div>
+        <pre class="citation-code" tabindex="0" aria-label="BibTeX citation"><code id="bibtex">@misc{ho2026learningdynamicgrasping,
+  title         = {Learning Dynamic Grasping},
+  author        = {Nga Kiu Kelly Ho and Yilin Liu and Hao Xu and Niloy J. Mitra},
+  year          = {2026},
+  eprint        = {2610.14848},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  doi           = {10.48550/arXiv.2610.14848},
+  url           = {https://arxiv.org/abs/2610.14848}
+}</code></pre>
+        <p id="citation-status" class="citation-status" role="status"></p>
       </section>
     </main>
     <footer class="footer"><span>Learning Dynamic Grasping</span><a href="#top">Back to top <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-5 5 5-5 5 5"/></svg></a></footer>

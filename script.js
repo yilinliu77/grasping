@@ -2,6 +2,27 @@
 (() => {
   'use strict';
   document.documentElement.classList.add('js');
+  const copyCitation = document.querySelector('#copy-citation');
+  copyCitation.addEventListener('click', async () => {
+    const citation = document.querySelector('#bibtex');
+    const status = document.querySelector('#citation-status');
+    status.textContent = '';
+    copyCitation.disabled = true;
+    try {
+      await navigator.clipboard.writeText(citation.textContent.trim() + '\n');
+      status.textContent = 'BibTeX copied to clipboard.';
+    } catch {
+      citation.parentElement.focus();
+      const range = document.createRange();
+      range.selectNodeContents(citation);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      status.textContent = 'Citation selected. Press Ctrl+C or ⌘C to copy.';
+    } finally {
+      copyCitation.disabled = false;
+    }
+  });
   const videos = [...document.querySelectorAll('.result-video')];
   const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const autoplayButton = document.querySelector('#autoplay');
@@ -133,11 +154,18 @@
   function updateNavigation() {
     let current = 0;
     sections.forEach((section, index) => { if (section.getBoundingClientRect().top <= 150) current = index; });
+    if (Math.ceil(window.scrollY + window.innerHeight) >= document.documentElement.scrollHeight - 2) current = sections.length - 1;
     navLinks.forEach((link, index) => {
       link.classList.toggle('active', index === current);
       if (index === current) link.setAttribute('aria-current', 'location');
       else link.removeAttribute('aria-current');
     });
+    const activeLink = navLinks[current];
+    const nav = activeLink.parentElement;
+    const navBounds = nav.getBoundingClientRect();
+    const linkBounds = activeLink.getBoundingClientRect();
+    if (linkBounds.left < navBounds.left) nav.scrollLeft -= navBounds.left - linkBounds.left;
+    else if (linkBounds.right > navBounds.right) nav.scrollLeft += linkBounds.right - navBounds.right;
     ticking = false;
   }
   document.addEventListener('scroll', () => {
